@@ -1,0 +1,5 @@
+/.qodo
+/.venv
+/events.json
+/myscrapping.py
+/__pycache__
