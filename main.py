@@ -25,24 +25,28 @@ MONTH_MAP = {
 }
 
 def parse_event_date(date_str: str):
-    date_parts = date_str.split(" ")
-    month_str = date_parts[2]
-    month = MONTH_MAP.get(month_str, "01")
-    time_part = date_parts[3]
-    time_components = time_part.split(":")
-    hour = time_components[0]
-    minute_part = time_components[1]
-    minute = minute_part.split(" ")[0]
-    am_pm = minute_part.split(" ")[1]
-    if len(date_parts[0]) == 1:
-        date = "0" + date_parts[0]
-    if am_pm.lower() == "p.m." and hour != "12":
-        hour = str(int(hour) + 12)
-    elif am_pm.lower() == "a.m." and hour < "12":
-        hour = "0" + hour
-    end_hour = str(int(hour) + 1)
-    if end_hour < "10":
-        end_hour = "0" + end_hour
+    date = date_str.get("date").split(" ")
+    month = MONTH_MAP.get(date[2])
+    is_pm = "p. m." in date_str.get("date")
+    hour_min = date[3].split(":")
+    hour = int(hour_min[0])
+    end_hour = 0
+    if is_pm:
+        if hour == 12:
+            pass
+        else:
+            hour += 12
+        end_hour = hour + 1
+    else:
+        end_hour = hour + 1
+        if len(str(hour)) == 1:
+            hour = f"0{hour}"
+        if len(str(end_hour)) == 1:
+            end_hour = f"0{end_hour}"
+    
+    minute = hour_min[1]
+    print(hour)
+    print(end_hour)
     return month, date, hour, minute, end_hour
 
 async def main():
