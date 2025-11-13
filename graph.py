@@ -4,23 +4,36 @@ from msgraph import GraphServiceClient
 from msgraph.generated.users.item.user_item_request_builder import UserItemRequestBuilder
 from kiota_abstractions.base_request_configuration import RequestConfiguration
 
+from auth import MSALCredential
+
 class Graph:
     settings: SectionProxy
     device_code_credential: DeviceCodeCredential
     user_client: GraphServiceClient
+    msal_credential: MSALCredential
 
     def __init__(self, config: SectionProxy):
         self.settings = config
-        client_id = self.settings['clientId']
-        tenant_id = self.settings['tenantId']
-        graph_scopes = self.settings['graphUserScopes'].split(' ')
+        self.client_id = self.settings['clientId']
+        self.tenant_id = self.settings['tenantId']
+        self.graph_scopes = self.settings['graphUserScopes'].split(' ')
 
-        self.device_code_credential = DeviceCodeCredential(client_id, tenant_id = tenant_id)
-        self.user_client = GraphServiceClient(self.device_code_credential, graph_scopes)
+        authority = None
+        if self.tenant_id and self.tenant_id.lower() == 'consumers':
+            authority = "https://login.microsoftonline.com/consumers"
+        elif self.tenant_id:
+            authority = f"https://login.microsoftonline.com/{self.tenant_id}"
+
+        self.msal_credential = MSALCredential(client_id=self.client_id, authority=authority, default_scopes=self.graph_scopes)
+        # GraphServiceClient acepta un TokenCredential-like; pasamos la MSALCredential
+        self.user_client = GraphServiceClient(self.msal_credential, self.graph_scopes)
+    
+
+        #self.device_code_credential = DeviceCodeCredential(client_id, tenant_id = tenant_id)
+        #self.user_client = GraphServiceClient(self.device_code_credential, graph_scopes)
     
     async def get_user_token(self):
-        graph_scopes = self.settings['graphUserScopes']
-        access_token = self.device_code_credential.get_token(graph_scopes)
+        access_token = self.msal_credential.get_token(self.settings['graphUserScopes'])
         return access_token.token
     
     async def get_user(self):
@@ -47,6 +60,6 @@ class Graph:
     
     async def create_Event(self, event):
         request_config = RequestConfiguration()
-        request_config.headers.add("Prefer", "outlook.timezone=\"Pacific Standard Time\"")
+        request_config.headers.add("Prefer", "outlook.timezone=\"Central Standard Time (Mexico)\"")
         created_event = await self.user_client.me.events.post(event, request_configuration=request_config)
         return created_event

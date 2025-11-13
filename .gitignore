@@ -3,3 +3,4 @@
 /events.json
 /myscrapping.py
 /__pycache__
+msal_token_cache.bin
