@@ -144,13 +144,13 @@ async def create_event(list_events: list[dict], graph: Graph):
     """
     for event in list_events:
         print(f"Creando evento: {event.get('title')}")
-        month, date, hour, minute, end_hour = parse_event_date(event.get("date"))
+        month, date, hour, minute, end_hour = parse_event_date(event.get("date")) # type: ignore
 
         request_body = Event(
             subject = event.get("title"),
             body = ItemBody(
                 content_type = BodyType.Html,
-                content = event.get("title") + "\n   " + event.get("date") + "\n   " + event.get("speaker"),
+                content = event.get("title") + "\n   " + event.get("date") + "\n   " + event.get("speaker"), # type: ignore
             ),
             start = DateTimeTimeZone(
                 #date_time = "2019-03-15T12:00:00",

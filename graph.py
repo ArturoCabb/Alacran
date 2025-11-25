@@ -24,16 +24,23 @@ class Graph:
         elif self.tenant_id:
             authority = f"https://login.microsoftonline.com/{self.tenant_id}"
 
+
+        # con auth persistente
         self.msal_credential = MSALCredential(client_id=self.client_id, authority=authority, default_scopes=self.graph_scopes)
         # GraphServiceClient acepta un TokenCredential-like; pasamos la MSALCredential
         self.user_client = GraphServiceClient(self.msal_credential, self.graph_scopes)
-    
 
-        #self.device_code_credential = DeviceCodeCredential(client_id, tenant_id = tenant_id)
-        #self.user_client = GraphServiceClient(self.device_code_credential, graph_scopes)
+        # sin auth persistente
+        #self.device_code_credential = DeviceCodeCredential(self.client_id, tenant_id = self.tenant_id)
+        #self.user_client = GraphServiceClient(self.device_code_credential, self.graph_scopes)
     
     async def get_user_token(self):
-        access_token = self.msal_credential.get_token(self.settings['graphUserScopes'])
+        # con auth
+        #access_token = self.msal_credential.get_token(self.settings['graphUserScopes'])
+        #return access_token.token
+        # sin auth
+        graph_scopes = self.settings['graphUserScopes']
+        access_token = self.device_code_credential.get_token(graph_scopes)
         return access_token.token
     
     async def get_user(self):
