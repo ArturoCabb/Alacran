@@ -4,9 +4,10 @@ import argparse
 import asyncio
 import configparser
 import re
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from os import getenv
 
 from bs4 import BeautifulSoup
 from msgraph.generated.models.body_type import BodyType
@@ -20,10 +21,8 @@ from graph import Graph
 
 
 SCRIPT_DIRECTORY = Path(__file__).resolve().parent
-CONFIG_FILES = (
-    SCRIPT_DIRECTORY / "config.cfg",
-    SCRIPT_DIRECTORY / "config.dev.cfg",
-)
+CONFIG_FILE = SCRIPT_DIRECTORY / getenv("CONFIG_FILE", "./config.cfg")
+
 OUTPUT_FILE = SCRIPT_DIRECTORY / "eventos_actinver.json"
 LOCAL_TIMEZONE = timezone(timedelta(hours=-6))
 GRAPH_TIMEZONE = "Central Standard Time (Mexico)"
@@ -172,7 +171,7 @@ def graph_event_needs_update(existing: Event, desired: Event) -> bool:
 
 def load_settings() -> tuple[configparser.ConfigParser, Graph]:
     config = configparser.ConfigParser()
-    config.read([str(path) for path in CONFIG_FILES])
+    config.read(CONFIG_FILE)
     if "azure" not in config:
         raise RuntimeError("No se encontró la sección [azure] en config.cfg.")
     if "actinver" not in config:
