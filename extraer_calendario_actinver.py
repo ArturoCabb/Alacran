@@ -388,12 +388,7 @@ def select_calendar_date(
             f"No se pudo confirmar la fecha {date_value} en el campo "
             f"{field_index + 1}; valor actual: {actual_value!r}."
         ) from error
-    wait.until(
-        lambda current_driver: not any(
-            picker.is_displayed()
-            for picker in current_driver.find_elements(By.ID, picker_id)
-        )
-    )
+    wait.until(EC.invisibility_of_element_located((By.ID, picker_id)))
 
 
 def create_driver(
