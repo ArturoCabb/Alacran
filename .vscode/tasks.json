@@ -1,0 +1,37 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🐍 Python: Ejecutar microsoft graph",
+            "type": "shell",
+            "command": ".venv/Scripts/python.exe microsoft_graph.py",
+            "options": {
+                "env": {
+                    "CONFIG_FILE": "config.dev.cfg"
+                }
+            }
+        },
+        {
+            "label": "🐍 Python: Ejecutar extraer calendario actinver",
+            "type": "shell",
+            "command": ".venv/Scripts/python.exe extraer_calendario_actinver.py --start-date 07/10/2026 --end-date 07/10/2026",
+            "options": {
+                "env": {
+                    "CONFIG_FILE": "config.dev.cfg"
+                }
+            }
+        },
+        {
+            "label": "🐍 Python: Ejecutar automatizacion",
+            "type": "shell",
+            "command": ".venv/Scripts/python.exe automatizado.py",
+            "options": {
+                "env": {
+                    "CONFIG_FILE": "config.dev.cfg"
+                }
+            }
+        },
+    ]
+}

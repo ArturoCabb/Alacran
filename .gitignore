@@ -4,5 +4,5 @@
 /myscrapping.py
 /__pycache__
 msal_token_cache.bin
-config.cfg
 eventos_actinver.json
+config.dev.cfg

@@ -4,14 +4,11 @@
         _type_: _description_
 """
 
+from os import getenv
 import asyncio
 import configparser
 from msgraph.generated.models.o_data_errors.o_data_error import ODataError
 from msgraph.generated.models.event import Event
-from msgraph.generated.models.item_body import ItemBody
-from msgraph.generated.models.body_type import BodyType
-from msgraph.generated.models.date_time_time_zone import DateTimeTimeZone
-from msgraph.generated.models.location import Location
 from graph import Graph
 
 async def main():
@@ -20,15 +17,16 @@ async def main():
     print('Python Graph Tutorial\n')
 
     # Load settings
+    config_file = getenv("CONFIG_FILE", "./config.cfg")
     config = configparser.ConfigParser()
-    config.read(['config.cfg', 'config.dev.cfg'])
+    config.read(config_file)
     azure_settings = config['azure']
 
     graph: Graph = Graph(azure_settings)
 
     await greet_user(graph)
 
-    choice = -1
+    choice: int = -1
 
     while choice != 0:
         print('Please choose one of the following options:')
@@ -128,14 +126,12 @@ async def list_events_in_calendar(graph: Graph, start_date: str | None = None, e
         print("No se encontraron eventos en el calendario.")
         return []
 
-    list_event = []
     for event in result.value:
         start = event.start.date_time if event.start else "Sin fecha"
         print(f"Título: {event.subject or '(sin título)'}")
         print(f"Fecha: {start}")
         print(f"ID: {event.id}")
         print("-" * 40)
-        list_event.append({"titulo": event.subject, ""})
 
 async def actualizar_eventos(graph: Graph, event_body: Event, event_id):
     """_summary_

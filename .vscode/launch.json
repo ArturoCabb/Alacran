@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🐍 Python: Depurar automatizacion",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder:python-app}/main.py",
+            "cwd": "${workspaceFolder:python-app}",
+            // Carga automáticamente el .env.test de la carpeta de Python
+            "envFile": "${workspaceFolder:python-app}/.env.test",
+            // Define variables de entorno adicionales para tu .config.test
+            "env": {
+                "ENV_MODE": "test",
+                "CONFIG_PATH": "${workspaceFolder:python-app}/.config.test"
+            },
+            "console": "integratedTerminal"
+        },
+    ]
+}
