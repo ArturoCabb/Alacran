@@ -414,6 +414,14 @@ def create_driver(
 
 
 def normalize_date(value: str | date | None) -> str:
+    """Normaliza la fecha
+
+    Args:
+        value (str | date | None): fecha para hacerla compatible con el calendario
+
+    Returns:
+        str: date in correct format
+    """
     if value is None:
         return date.today().strftime("%d/%m/%Y")
     if isinstance(value, datetime):
@@ -505,6 +513,8 @@ def extract_events(
 
 
 def main() -> None:
+    """Inicio del script
+    """
     args = parse_arguments()
     today = date.today().strftime("%d/%m/%Y")
     start_date = args.start_date or input(
