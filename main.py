@@ -165,7 +165,7 @@ async def create_event(list_events: list[dict], graph: Graph):
                 display_name = "Webex",
             )
         )
-        result = await graph.create_Event(request_body)
+        result = await graph.create_event(request_body)
         print(result)
 
 asyncio.run(main())
